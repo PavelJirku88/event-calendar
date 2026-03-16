@@ -493,6 +493,99 @@
       text-transform: uppercase;
       margin-bottom: 14px;
     }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 600px) {
+      body { padding: 0 0 40px; }
+
+      .app-header {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 14px 10px 12px;
+      }
+
+      .month-nav { order: 1; width: 100%; justify-content: center; }
+
+      .month-label { font-size: 20px; min-width: 0; }
+
+      .header-right { order: 2; width: 100%; justify-content: center; gap: 6px; }
+
+      .today-btn, .icon-btn {
+        font-size: 9px;
+        padding: 5px 10px;
+      }
+
+      .icon-btn svg { display: none; }
+
+      .cal-wrap { padding: 0 4px; }
+
+      .day-headers { gap: 1px; margin-top: 10px; }
+
+      .day-header {
+        font-size: 7px;
+        letter-spacing: 0.08em;
+        padding: 5px 0;
+      }
+
+      .cal-grid { gap: 1px; }
+
+      .day-cell {
+        min-height: 52px;
+        padding: 4px 3px;
+      }
+
+      .day-num {
+        font-size: 10px;
+        margin-bottom: 3px;
+      }
+
+      /* On mobile: hide text pills, show compact dots */
+      .event-pill {
+        font-size: 0;          /* hide text */
+        padding: 0;
+        border-radius: 50%;
+        width: 8px;
+        height: 8px;
+        display: inline-block;
+        margin: 1px;
+        border-width: 1px;
+        flex-shrink: 0;
+      }
+
+      .day-events {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 2px;
+      }
+
+      .overflow-pill { font-size: 7px; padding: 1px 3px; }
+
+      /* Modal: full screen on mobile */
+      .modal {
+        width: 100%;
+        max-width: 100%;
+        min-height: 60vh;
+        max-height: 92vh;
+        overflow-y: auto;
+        border-radius: 16px 16px 0 0;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 24px 20px 32px;
+        transform: translateY(30px);
+      }
+
+      .modal-overlay { align-items: flex-end; }
+      .modal-overlay.open .modal { transform: translateY(0); }
+
+      .inline-date-picker {
+        right: auto;
+        left: 0;
+      }
+
+      .add-hint { display: none; }
+    }
   </style>
 </head>
 <body>
