@@ -1439,6 +1439,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
 });
 
+document.getElementById('exportBtn').onclick = exportEvents;
+
 document.getElementById('clearBtn').onclick = () => {
   document.getElementById('clearOverlay').classList.add('open');
 };
