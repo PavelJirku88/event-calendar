@@ -43,21 +43,16 @@
       justify-content: space-between;
       padding: 28px 16px 20px;
       border-bottom: 1px solid var(--border);
-    }
-
-    .app-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 13px;
-      font-style: italic;
-      color: var(--gold);
-      letter-spacing: 0.15em;
-      text-transform: lowercase;
+      position: relative;
     }
 
     .month-nav {
       display: flex;
       align-items: center;
       gap: 24px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .month-label {
@@ -85,7 +80,7 @@
       display: flex; align-items: center; justify-content: center;
       transition: all 0.15s;
     }
-    .nav-btn:hover { background: var(--border); border-color: var(--border2); }
+    .nav-btn:hover { background: var(--surface2); border-color: var(--border2); color: var(--gold); }
 
     .today-btn {
       background: none;
@@ -154,7 +149,7 @@
 
     .day-headers {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: 32px repeat(7, 1fr);
       gap: 2px;
       margin-top: 24px;
       margin-bottom: 2px;
@@ -171,10 +166,35 @@
 
     .day-header.weekend { }
 
+    .week-num-header {
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-align: center;
+      padding: 8px 0;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+
     .cal-grid {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: 32px repeat(7, 1fr);
       gap: 2px;
+    }
+
+    .week-num-cell {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 8px;
+      font-size: 9px;
+      color: var(--muted);
+      opacity: 0.5;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      background: transparent;
+      border: none;
+      user-select: none;
     }
 
     .day-cell {
@@ -213,6 +233,7 @@
     .day-events { display: flex; flex-direction: column; gap: 3px; }
 
     .event-pill {
+      font-family: Arial, sans-serif;
       font-size: 10px;
       font-weight: 400;
       padding: 4px 7px;
@@ -362,47 +383,82 @@
       line-height: 1;
     }
     .modal-event-move:hover { color: var(--gold); }
+    .modal-event-move.active { color: var(--gold); }
 
-    .inline-date-picker {
-      display: none;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 10px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      position: absolute;
-      right: 12px;
-      top: calc(100% + 4px);
-      z-index: 11;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-      white-space: nowrap;
+    .event-order-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      flex-shrink: 0;
     }
 
-    .inline-date-picker input[type="date"] {
+    .order-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 9px;
+      padding: 1px 3px;
+      line-height: 1;
+      border-radius: 2px;
+      transition: color 0.12s;
+    }
+    .order-btn:hover { color: var(--text); }
+    .order-btn:disabled { opacity: 0.2; cursor: default; }
+
+    .event-edit-fields {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+    }
+    .event-edit-fields.open { display: flex; }
+
+    .event-edit-input {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 11px;
       border: 1px solid var(--border);
       border-radius: 3px;
-      padding: 4px 6px;
+      padding: 4px 8px;
       background: var(--surface2);
       color: var(--text);
       outline: none;
+      width: 100%;
     }
-    .inline-date-picker input[type="date"]:focus { border-color: var(--gold); }
+    .event-edit-input:focus { border-color: var(--gold); }
 
-    .idp-confirm {
+    .event-edit-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .edit-save-btn {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      padding: 4px 10px;
+      font-size: 9px;
+      padding: 3px 10px;
       background: var(--text);
       color: var(--surface);
       border: none;
       border-radius: 3px;
       cursor: pointer;
+      letter-spacing: 0.06em;
       transition: opacity 0.12s;
     }
-    .idp-confirm:hover { opacity: 0.75; }
+    .edit-save-btn:hover { opacity: 0.75; }
+
+    .edit-cancel-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      padding: 3px 10px;
+      background: none;
+      color: var(--muted);
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+    }
+
 
     .divider {
       border: none; border-top: 1px solid var(--border);
@@ -436,7 +492,7 @@
     .form-input::placeholder { color: var(--muted); }
 
     .color-row {
-      display: flex; gap: 8px; margin-bottom: 20px;
+      display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
     }
 
     .color-swatch {
@@ -445,6 +501,8 @@
       cursor: pointer;
       border: 2px solid transparent;
       transition: transform 0.12s, border-color 0.12s;
+      position: relative;
+      overflow: hidden;
     }
 
     .color-swatch:hover { transform: scale(1.2); }
@@ -504,7 +562,7 @@
         padding: 14px 10px 12px;
       }
 
-      .month-nav { order: 1; width: 100%; justify-content: center; }
+      .month-nav { order: 1; width: 100%; justify-content: center; position: static; transform: none; }
 
       .month-label { font-size: 20px; min-width: 0; }
 
@@ -519,7 +577,10 @@
 
       .cal-wrap { padding: 0 4px; }
 
-      .day-headers { gap: 1px; margin-top: 10px; }
+      .day-headers { gap: 1px; margin-top: 10px; grid-template-columns: 22px repeat(7, 1fr); }
+
+      .week-num-header, .week-num-cell { font-size: 7px; }
+      .week-num-cell { padding-top: 5px; }
 
       .day-header {
         font-size: 7px;
@@ -527,7 +588,7 @@
         padding: 5px 0;
       }
 
-      .cal-grid { gap: 1px; }
+      .cal-grid { gap: 1px; grid-template-columns: 22px repeat(7, 1fr); }
 
       .day-cell {
         min-height: 52px;
@@ -579,11 +640,6 @@
       .modal-overlay { align-items: flex-end; }
       .modal-overlay.open .modal { transform: translateY(0); }
 
-      .inline-date-picker {
-        right: auto;
-        left: 0;
-      }
-
       .add-hint { display: none; }
     }
   </style>
@@ -619,6 +675,7 @@
 
 <div class="cal-wrap">
   <div class="day-headers">
+    <div class="week-num-header">W</div>
     <div class="day-header">Mon</div>
     <div class="day-header">Tue</div>
     <div class="day-header">Wed</div>
@@ -656,9 +713,38 @@
 
 <script>
 // ─── State ───────────────────────────────────────────────────────────────────
-const COLORS    = [null, '#8a6820','#c04040','#2a8a72','#2a5ca8','#7040a8','#a85020'];
-const COLOR_BG  = ['transparent','rgba(138,104,32,0.12)','rgba(192,64,64,0.12)','rgba(42,138,114,0.12)',
-                   'rgba(42,92,168,0.12)','rgba(112,64,168,0.12)','rgba(168,80,32,0.12)'];
+const ATTENDING_COLOR = '#1a7a4a'; // special "I'm going" green (★)
+const MAYBE_COLOR     = '__maybe__'; // same green border, white bg (?)
+const COLORS    = [null,
+  '#8a6820', // gold
+  '#c0392b', // red
+  '#1a7a4a', // ★ attending green
+  '__maybe__', // ? intending green (border only)
+  '#1a3a8a', // deep blue
+  '#7d3c98', // purple
+  '#d35400', // burnt orange
+  '#7cb518',  // lime green
+  '#148080', // teal
+  '#e74c6b', // hot pink
+  '#2c5aa0', // cornflower blue
+  '#6d4c41', // warm brown
+  '#b7950b', // dark yellow
+  '#1abc9c', // mint
+  '#8e44ad', // violet
+  '#e67e22', // orange
+  '#2980b9', // sky blue
+  '#922b21', // dark red
+  '#1d8348', // forest green
+];
+
+const COLOR_BG  = ['transparent',
+  'rgba(138,104,32,0.12)', 'rgba(192,57,43,0.12)', 'rgba(26,122,74,0.22)',
+  'transparent',
+  'rgba(26,58,138,0.12)',  'rgba(125,60,152,0.12)', 'rgba(211,84,0,0.12)',
+  'rgba(124,181,24,0.12)', 'rgba(20,128,128,0.12)', 'rgba(231,76,107,0.12)',
+  'rgba(44,90,160,0.12)',  'rgba(109,76,65,0.12)',  'rgba(183,149,11,0.12)',
+  'rgba(26,188,156,0.12)', 'rgba(142,68,173,0.12)', 'rgba(230,126,34,0.12)',
+  'rgba(41,128,185,0.12)', 'rgba(146,43,33,0.12)',  'rgba(29,131,72,0.12)'];
 const DAYS_EN = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const MONTH_NAMES = ['January','February','March','April','May','June',
                      'July','August','September','October','November','December'];
@@ -795,6 +881,13 @@ function renderMonthLabel() {
     `${MONTH_NAMES[viewMonth]} <span>${viewYear}</span>`;
 }
 
+function getISOWeek(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
 function renderGrid() {
   const grid = document.getElementById('calGrid');
   grid.innerHTML = '';
@@ -826,6 +919,29 @@ function renderGrid() {
       year  = viewYear;
     }
 
+    // Insert week number cell at start of each row
+    if (i % 7 === 0) {
+      const weekCell = document.createElement('div');
+      weekCell.className = 'week-num-cell';
+      // Determine the Monday of this row
+      let rowDay, rowMonth, rowYear;
+      if (i < startOffset) {
+        rowDay   = daysInPrev - startOffset + i + 1;
+        rowMonth = viewMonth === 0 ? 11 : viewMonth - 1;
+        rowYear  = viewMonth === 0 ? viewYear - 1 : viewYear;
+      } else if (i >= startOffset + daysInMonth) {
+        rowDay   = i - startOffset - daysInMonth + 1;
+        rowMonth = viewMonth === 11 ? 0 : viewMonth + 1;
+        rowYear  = viewMonth === 11 ? viewYear + 1 : viewYear;
+      } else {
+        rowDay   = i - startOffset + 1;
+        rowMonth = viewMonth;
+        rowYear  = viewYear;
+      }
+      weekCell.textContent = getISOWeek(new Date(rowYear, rowMonth, rowDay));
+      grid.appendChild(weekCell);
+    }
+
     const key = fmtKey(year, month, day);
     const isToday = (new Date(year, month, day).getTime() === today.getTime());
     const dayEvents = getEventsFor(key);
@@ -846,9 +962,13 @@ function renderGrid() {
     dayEvents.slice(0, maxShow).forEach(ev => {
       const pill = document.createElement('div');
       pill.className = 'event-pill';
-      pill.style.background = colorBg(ev.color);
-      pill.style.color = ev.color || 'var(--text)';
-      pill.style.border = ev.color ? `1px solid ${ev.color}` : `1px solid var(--border2)`;
+      const isMaybe    = ev.color === MAYBE_COLOR;
+      const isAttending = ev.color === ATTENDING_COLOR;
+      const borderColor = (isMaybe || isAttending) ? ATTENDING_COLOR : (ev.color || 'var(--border2)');
+      pill.style.background = isMaybe ? '#ffffff' : colorBg(ev.color);
+      pill.style.color = isMaybe ? ATTENDING_COLOR : (ev.color || 'var(--text)');
+      pill.style.border = (isAttending || isMaybe) ? `2px solid ${ATTENDING_COLOR}` : (ev.color ? `1px solid ${ev.color}` : `1px solid var(--border2)`);
+      pill.style.fontWeight = isAttending ? '700' : '400';
       pill.textContent = ev.name + (ev.location ? ' · ' + ev.location : '');
       pill.title = ev.name + '\n' + ev.location;
       pill.onclick = (e) => { e.stopPropagation(); openModal(key); };
@@ -875,7 +995,7 @@ function renderGrid() {
 }
 
 function colorBg(hex) {
-  if (!hex) return 'transparent';
+  if (!hex || hex === MAYBE_COLOR) return 'transparent';
   const idx = COLORS.indexOf(hex);
   return idx >= 0 ? COLOR_BG[idx] : hex + '22';
 }
@@ -906,17 +1026,54 @@ function renderModalEvents(key) {
   const evs = getEventsFor(key);
   if (evs.length === 0) return;
 
-  evs.forEach(ev => {
+  evs.forEach((ev, idx) => {
     // Row
     const row = document.createElement('div');
     row.className = 'modal-event-row';
+
+    // Up / Down buttons
+    const orderBtns = document.createElement('div');
+    orderBtns.className = 'event-order-btns';
+
+    const upBtn = document.createElement('button');
+    upBtn.className = 'order-btn';
+    upBtn.title = 'Move up';
+    upBtn.innerHTML = '▲';
+    upBtn.disabled = idx === 0;
+    upBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const arr = events[key];
+      [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
+      saveEvents();
+      renderModalEvents(key);
+      renderGrid();
+    });
+
+    const downBtn = document.createElement('button');
+    downBtn.className = 'order-btn';
+    downBtn.title = 'Move down';
+    downBtn.innerHTML = '▼';
+    downBtn.disabled = idx === evs.length - 1;
+    downBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const arr = events[key];
+      [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
+      saveEvents();
+      renderModalEvents(key);
+      renderGrid();
+    });
+
+    orderBtns.appendChild(upBtn);
+    orderBtns.appendChild(downBtn);
 
     // Dot button
     const dot = document.createElement('button');
     dot.className = 'modal-event-dot-btn';
     dot.title = 'Change colour';
-    dot.style.background = ev.color || 'transparent';
-    dot.style.border = `2px solid ${ev.color || 'var(--border2)'}`;
+    dot.style.background = ev.color === MAYBE_COLOR ? '#ffffff' : (ev.color || 'transparent');
+    dot.style.border = (ev.color === MAYBE_COLOR || ev.color === ATTENDING_COLOR)
+      ? `2px solid ${ATTENDING_COLOR}`
+      : `2px solid ${ev.color || 'var(--border2)'}`;
 
     // Inline picker (hidden)
     const picker = document.createElement('div');
@@ -927,12 +1084,20 @@ function renderModalEvents(key) {
     COLORS.forEach(c => {
       const sw = document.createElement('div');
       sw.className = 'icp-swatch' + (ev.color === c ? ' active' : '');
-      sw.style.background = c || 'transparent';
-      sw.style.border = `2px solid ${c || 'var(--border2)'}`;
+      const isMaybeSw     = c === MAYBE_COLOR;
+      const isAttendingSw = c === ATTENDING_COLOR;
+      sw.style.background = isMaybeSw ? '#ffffff' : (c || 'transparent');
+      sw.style.border = (isAttendingSw || isMaybeSw) ? `2px solid ${ATTENDING_COLOR}` : `2px solid ${c || 'var(--border2)'}`;
+      sw.style.position = 'relative';
+      sw.style.overflow = 'hidden';
       if (!c) {
-        sw.style.position = 'relative';
-        sw.style.overflow = 'hidden';
         sw.innerHTML = '<svg viewBox="0 0 10 10" style="position:absolute;inset:0;width:100%;height:100%;"><line x1="1" y1="9" x2="9" y2="1" stroke="var(--border2)" stroke-width="1.5"/></svg>';
+      } else if (isAttendingSw) {
+        sw.title = '★ Attending';
+        sw.innerHTML = '<svg viewBox="0 0 10 10" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"><text x="5" y="8" text-anchor="middle" font-size="7" fill="white">★</text></svg>';
+      } else if (isMaybeSw) {
+        sw.title = '? Intending (no ticket)';
+        sw.innerHTML = `<svg viewBox="0 0 10 10" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"><text x="5" y="8" text-anchor="middle" font-size="8" font-weight="bold" fill="${ATTENDING_COLOR}">?</text></svg>`;
       }
       sw.addEventListener('mousedown', e => {
         // mousedown fires before the document click that would close the picker
@@ -954,72 +1119,120 @@ function renderModalEvents(key) {
       picker.style.display = isOpen ? 'none' : 'flex';
     });
 
-    // Info
+    // Info (view mode)
     const info = document.createElement('div');
     info.className = 'modal-event-info';
     info.innerHTML = `<div class="modal-event-name">${ev.name}</div>
                       <div class="modal-event-loc">${ev.location || '—'}</div>`;
 
-    // Move-date button
-    const moveBtn = document.createElement('button');
-    moveBtn.className = 'modal-event-move';
-    moveBtn.title = 'Move to different date';
-    moveBtn.innerHTML = '&#9998;'; // pencil
+    // Edit fields (edit mode, hidden by default)
+    const editFields = document.createElement('div');
+    editFields.className = 'event-edit-fields';
 
-    // Inline date picker (hidden)
-    const datePicker = document.createElement('div');
-    datePicker.className = 'inline-date-picker';
-    datePicker.style.display = 'none';
+    const editName = document.createElement('input');
+    editName.className = 'event-edit-input';
+    editName.type = 'text';
+    editName.value = ev.name;
+    editName.placeholder = 'Event name';
 
-    const dateInput = document.createElement('input');
-    dateInput.type = 'date';
-    dateInput.value = key; // pre-fill with current date
+    const editLoc = document.createElement('input');
+    editLoc.className = 'event-edit-input';
+    editLoc.type = 'text';
+    editLoc.value = ev.location || '';
+    editLoc.placeholder = 'Location';
 
-    const confirmBtn = document.createElement('button');
-    confirmBtn.className = 'idp-confirm';
-    confirmBtn.textContent = 'Move';
+    const editDate = document.createElement('input');
+    editDate.className = 'event-edit-input';
+    editDate.type = 'date';
+    editDate.value = key;
 
-    const moveEvent = () => {
-      const newKey = dateInput.value;
-      if (!newKey || newKey === key) { datePicker.style.display = 'none'; return; }
-      // Remove from old date
-      events[key] = (events[key] || []).filter(e => e.id !== ev.id);
-      if (events[key].length === 0) delete events[key];
-      // Add to new date
-      if (!events[newKey]) events[newKey] = [];
-      events[newKey].push(ev);
-      saveEvents();
-      showToast('✓ Event moved');
-      // If the new date is still the selected month, keep modal open on new key
-      const [ny, nm] = newKey.split('-').map(Number);
-      if (ny === viewYear && nm === viewMonth + 1) {
-        selectedDate = newKey;
-        const dateObj2 = new Date(ny, nm - 1, parseInt(newKey.split('-')[2]));
-        const dayName2 = DAYS_EN[dateObj2.getDay() === 0 ? 6 : dateObj2.getDay() - 1];
-        document.getElementById('modalDate').innerHTML =
-          `${parseInt(newKey.split('-')[2])} <span>${MONTH_NAMES[nm-1]}</span> ${ny}`;
-        document.getElementById('modalSubtitle').textContent = dayName2;
-        renderModalEvents(newKey);
+    const editActions = document.createElement('div');
+    editActions.className = 'event-edit-actions';
+
+    const editSave = document.createElement('button');
+    editSave.className = 'edit-save-btn';
+    editSave.textContent = 'Save';
+
+    const editCancel = document.createElement('button');
+    editCancel.className = 'edit-cancel-btn';
+    editCancel.textContent = 'Cancel';
+
+    editActions.appendChild(editSave);
+    editActions.appendChild(editCancel);
+    editFields.appendChild(editName);
+    editFields.appendChild(editLoc);
+    editFields.appendChild(editDate);
+    editFields.appendChild(editActions);
+
+    const openEdit = () => {
+      info.style.display = 'none';
+      editFields.classList.add('open');
+      moveBtn.classList.add('active');
+      list.querySelectorAll('.inline-color-picker, .inline-date-picker').forEach(p => p.style.display = 'none');
+      setTimeout(() => editName.focus(), 50);
+    };
+
+    const closeEdit = () => {
+      info.style.display = '';
+      editFields.classList.remove('open');
+      moveBtn.classList.remove('active');
+      // Reset to current values
+      editName.value = ev.name;
+      editLoc.value = ev.location || '';
+      editDate.value = key;
+    };
+
+    const commitEdit = () => {
+      const newName = editName.value.trim();
+      if (!newName) { editName.focus(); return; }
+      const newLoc  = editLoc.value.trim();
+      const newKey  = editDate.value;
+
+      ev.name     = newName;
+      ev.location = newLoc;
+
+      if (newKey && newKey !== key) {
+        // Move to different date
+        events[key] = (events[key] || []).filter(e => e.id !== ev.id);
+        if (events[key].length === 0) delete events[key];
+        if (!events[newKey]) events[newKey] = [];
+        events[newKey].push(ev);
+        saveEvents();
+        showToast('✓ Event updated');
+        const [ny, nm] = newKey.split('-').map(Number);
+        if (ny === viewYear && nm === viewMonth + 1) {
+          selectedDate = newKey;
+          const d2 = new Date(ny, nm - 1, parseInt(newKey.split('-')[2]));
+          document.getElementById('modalDate').innerHTML =
+            `${parseInt(newKey.split('-')[2])} <span>${MONTH_NAMES[nm-1]}</span> ${ny}`;
+          document.getElementById('modalSubtitle').textContent =
+            DAYS_EN[d2.getDay() === 0 ? 6 : d2.getDay() - 1];
+          renderModalEvents(newKey);
+        } else {
+          closeModal();
+        }
       } else {
-        closeModal();
+        saveEvents();
+        showToast('✓ Event updated');
+        renderModalEvents(key);
       }
       renderGrid();
     };
 
-    confirmBtn.addEventListener('click', e => { e.stopPropagation(); moveEvent(); });
-    dateInput.addEventListener('keydown', e => { if (e.key === 'Enter') moveEvent(); });
+    editSave.addEventListener('click', e => { e.stopPropagation(); commitEdit(); });
+    editCancel.addEventListener('click', e => { e.stopPropagation(); closeEdit(); });
+    editName.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); editLoc.focus(); } if (e.key === 'Escape') closeEdit(); });
+    editLoc.addEventListener('keydown',  e => { if (e.key === 'Enter') { e.preventDefault(); commitEdit(); } if (e.key === 'Escape') closeEdit(); });
+    editDate.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); commitEdit(); } if (e.key === 'Escape') closeEdit(); });
 
-    datePicker.addEventListener('click', e => e.stopPropagation());
-    datePicker.appendChild(dateInput);
-    datePicker.appendChild(confirmBtn);
-
+    // Pencil / edit toggle button
+    const moveBtn = document.createElement('button');
+    moveBtn.className = 'modal-event-move';
+    moveBtn.title = 'Edit event';
+    moveBtn.innerHTML = '&#9998;';
     moveBtn.addEventListener('click', e => {
       e.stopPropagation();
-      // Close colour pickers and other date pickers
-      list.querySelectorAll('.inline-color-picker, .inline-date-picker').forEach(p => p.style.display = 'none');
-      const isOpen = datePicker.style.display !== 'none';
-      datePicker.style.display = isOpen ? 'none' : 'flex';
-      if (!isOpen) setTimeout(() => dateInput.focus(), 50);
+      editFields.classList.contains('open') ? closeEdit() : openEdit();
     });
 
     // Delete button
@@ -1036,32 +1249,43 @@ function renderModalEvents(key) {
       renderGrid();
     });
 
+    row.appendChild(orderBtns);
     row.appendChild(dot);
     row.appendChild(picker);
     row.appendChild(info);
+    row.appendChild(editFields);
     row.appendChild(moveBtn);
-    row.appendChild(datePicker);
     row.appendChild(del);
     list.appendChild(row);
   });
 
-  // Close pickers when clicking anywhere in the modal except the pickers themselves
+  // Close colour pickers when clicking anywhere in the modal except the pickers themselves
   list.addEventListener('click', () => {
-    list.querySelectorAll('.inline-color-picker, .inline-date-picker').forEach(p => p.style.display = 'none');
+    list.querySelectorAll('.inline-color-picker').forEach(p => p.style.display = 'none');
   });
 }
 
 function renderColorPicker() {
   const row = document.getElementById('colorRow');
-  row.innerHTML = COLORS.map((c, i) => `
-    <div class="color-swatch ${i === selectedColor ? 'active' : ''}"
-         style="background:${c || 'transparent'};
-                border: 2px solid ${c || 'var(--border2)'};
-                ${!c ? 'position:relative;overflow:hidden;' : ''}"
-         data-idx="${i}">
-      ${!c ? '<svg viewBox="0 0 16 16" style="position:absolute;inset:0;width:100%;height:100%;"><line x1="2" y1="14" x2="14" y2="2" stroke="var(--border2)" stroke-width="1.8"/></svg>' : ''}
-    </div>
-  `).join('');
+  row.innerHTML = COLORS.map((c, i) => {
+    const isAttending = c === ATTENDING_COLOR;
+    const isMaybe     = c === MAYBE_COLOR;
+    const bg     = isMaybe ? '#ffffff' : (c || 'transparent');
+    const border = (isAttending || isMaybe) ? `2px solid ${ATTENDING_COLOR}` : `2px solid ${c || 'var(--border2)'}`;
+    const inner  = !c
+      ? '<svg viewBox="0 0 16 16" style="position:absolute;inset:0;width:100%;height:100%;"><line x1="2" y1="14" x2="14" y2="2" stroke="var(--border2)" stroke-width="1.8"/></svg>'
+      : isAttending
+        ? `<svg viewBox="0 0 16 16" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"><text x="8" y="12" text-anchor="middle" font-size="9" fill="white">★</text></svg>`
+        : isMaybe
+        ? `<svg viewBox="0 0 16 16" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"><text x="8" y="12" text-anchor="middle" font-size="10" font-weight="bold" fill="${ATTENDING_COLOR}">?</text></svg>`
+        : '';
+    return `<div class="color-swatch ${i === selectedColor ? 'active' : ''}"
+         style="background:${bg}; border:${border}; position:relative; overflow:hidden;"
+         data-idx="${i}"
+         title="${isAttending ? '★ Attending' : isMaybe ? '? Intending (no ticket)' : ''}">
+      ${inner}
+    </div>`;
+  }).join('');
   row.querySelectorAll('.color-swatch').forEach(sw => {
     sw.onclick = () => {
       selectedColor = +sw.dataset.idx;
