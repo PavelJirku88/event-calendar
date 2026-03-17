@@ -119,6 +119,7 @@
     }
     .icon-btn:hover { border-color: var(--gold); color: var(--gold); }
     .icon-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+    .icon-btn-danger:hover { border-color: #c0392b !important; color: #c0392b !important; }
 
     /* ─── TOAST ─── */
     .toast {
@@ -667,9 +668,27 @@
       </svg>
       import
     </button>
+    <button class="icon-btn icon-btn-danger" id="clearBtn">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 9h8l1-9"/>
+      </svg>
+      clear
+    </button>
     <input type="file" id="importFile" accept=".json" style="display:none">
   </div>
 </header>
+
+<!-- CONFIRM CLEAR MODAL -->
+<div class="modal-overlay" id="clearOverlay">
+  <div class="modal" style="max-width:340px; text-align:center;">
+    <div class="modal-date" style="font-size:18px; margin-bottom:8px;">Clear all data?</div>
+    <div class="modal-subtitle" style="margin-bottom:24px; font-size:11px; line-height:1.6;">This will permanently delete all events from this device. Export a backup first if needed.</div>
+    <div class="modal-actions" style="justify-content:center; gap:12px;">
+      <button class="btn btn-ghost" id="clearCancelBtn">Cancel</button>
+      <button class="btn" id="clearConfirmBtn" style="background:#c0392b; color:#fff; font-weight:500;">Delete everything</button>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -1351,7 +1370,19 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
 });
 
-document.getElementById('exportBtn').onclick = exportEvents;
+document.getElementById('clearBtn').onclick = () => {
+  document.getElementById('clearOverlay').classList.add('open');
+};
+document.getElementById('clearCancelBtn').onclick = () => {
+  document.getElementById('clearOverlay').classList.remove('open');
+};
+document.getElementById('clearConfirmBtn').onclick = () => {
+  events = {};
+  saveEvents();
+  document.getElementById('clearOverlay').classList.remove('open');
+  render();
+  showToast('✓ All data cleared');
+};
 
 document.getElementById('importBtn').onclick = () => {
   document.getElementById('importFile').click();
