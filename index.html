@@ -643,6 +643,75 @@
 
       .add-hint { display: none; }
     }
+
+    @media (max-width: 900px) and (orientation: landscape) {
+      .app-header {
+        flex-wrap: nowrap;
+        padding: 10px 12px;
+        gap: 0;
+      }
+
+      .month-nav {
+        position: static;
+        transform: none;
+        gap: 12px;
+        flex: 1;
+        justify-content: center;
+      }
+
+      .month-label { font-size: 18px; min-width: 180px; }
+
+      .header-right {
+        gap: 5px;
+        flex-shrink: 0;
+      }
+
+      .today-btn, .icon-btn {
+        font-size: 8px;
+        padding: 4px 8px;
+      }
+
+      .nav-btn { width: 28px; height: 28px; font-size: 13px; }
+
+      .cal-wrap { padding: 0 4px; }
+
+      .day-cell { min-height: 60px; }
+    }
+
+    /* ─── MOBILE LANDSCAPE ─── */
+    @media (max-width: 900px) and (orientation: landscape) {
+      .app-header {
+        padding: 8px 12px;
+        flex-wrap: nowrap;
+      }
+
+      .month-nav {
+        position: static;
+        transform: none;
+        gap: 12px;
+        flex: 1;
+        justify-content: center;
+      }
+
+      .month-label { font-size: 18px; min-width: 0; }
+
+      .header-right { gap: 4px; }
+
+      .today-btn, .icon-btn {
+        font-size: 8px;
+        padding: 4px 8px;
+      }
+
+      .icon-btn svg { display: none; }
+
+      .nav-btn { width: 28px; height: 28px; font-size: 13px; }
+
+      .cal-wrap { padding: 0 8px; }
+
+      .day-headers { margin-top: 8px; }
+
+      .day-cell { min-height: 70px; }
+    }
   </style>
 </head>
 <body>
